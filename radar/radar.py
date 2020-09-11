@@ -4,7 +4,7 @@ import glob
 try:
 	from mpl_toolkits.basemap import Basemap, addcyclic, shiftgrid, cm
 except:
-	print 'se desactivan funciones de ploteo con Basemap'
+	print ('se desactivan funciones de ploteo con Basemap')
 	pass
 import pylab as pl
 import scipy.ndimage as nd
@@ -209,7 +209,7 @@ class radar_process:
 		try:
 		    ref = np.reshape(reflectividad,(1728,1728))
 		except BaseException:
-		    print "Binario defectuoso"
+		    print ("Binario defectuoso")
 		ref[ref==-999]=0.0
 		ref=np.flipud(ref)
 		ref[ref<5]=0
@@ -390,7 +390,7 @@ class radar_process:
 		if radar_f90.dxp<>0.0:
 			return np.log(self.cant_elem)/np.log(radar_f90.dxp)
 		else:
-			print 'Error: radar.dxp=0.0'
+			print ('Error: radar.dxp=0.0')
 	#Dimension fractal superficie
 	def Fractal_Dimension_Surface(self,imageIn,ObjectList,sigma=0.0,k=12,a=1):
 		'\n'\
