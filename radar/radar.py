@@ -517,8 +517,7 @@ class radar_process:
 			umbral,radio,metNum,ZminSiriluk,a_yuter,b_yuter,
 			int(self.ref.shape[0]), int(self.ref.shape[1]))
 	
-	def save_rain_class(self, ruta, ExtraVar = None, ArrayVar1 = None, 
-                    ArrayVar2=None):
+	def save_rain_class(self, ruta, ExtraVar = None, ArrayVar1 = None, ArrayVar2=None):
 		gr = Dataset(ruta,'w',format='NETCDF4')
 		'Descripcion: Guarda datos de radar procesados\n'\
 		'\n'\
@@ -535,7 +534,7 @@ class radar_process:
 		'----------\n'\
 		'self : Con las variables iniciadas.\n'\
                 #Diccionario de propiedades
-		Dict = {'ncols':RadProp[0],
+		Dict = {'ncols': RadProp[0],
                     'nrows': RadProp[1],
                     'xll': RadProp[2],
                     'yll': RadProp[3],
@@ -637,7 +636,7 @@ class radar_process:
 			self.ppt.update({name:c3_all})
 	
 class draw_func:
-	def __init__(self):
+    def __init__(self):
 		pass
 	
 	#Hace un plot elegante de la imagen de radar	
