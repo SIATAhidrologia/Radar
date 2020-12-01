@@ -539,13 +539,13 @@ class radar_process:
                 #Establece tamano de las variables 
         DimNcol = gr.createDimension('ncols',self.ConvStra.shape[0])
         DimNfil = gr.createDimension('nrows',self.ConvStra.shape[1])
-                #variables del arrayVar
-                if type(ArrayVar1) is dict:
-                    k = ArrayVar1.keys()[0]
-                    DimArray = gr.createDimension('narray1',ArrayVar1[k]['Data'].size)
-                if type(ArrayVar2) is dict:
-                    k = ArrayVar2.keys()[0]
-                    DimArray = gr.createDimension('narray2',ArrayVar2[k]['Data'].size)
+		#variables del arrayVar
+		if type(ArrayVar1) is dict:
+			k = ArrayVar1.keys()[0]
+			DimArray = gr.createDimension('narray1',ArrayVar1[k]['Data'].size)
+		if type(ArrayVar2) is dict:
+			k = ArrayVar2.keys()[0]
+			DimArray = gr.createDimension('narray2',ArrayVar2[k]['Data'].size)
         #Crea variables
         ClasStruct = gr.createVariable('Conv_Strat','i4',('ncols','nrows'),zlib=True)
         ClasRain = gr.createVariable('Rain', 'i4', ('ncols','nrows'),zlib=True)
@@ -566,20 +566,20 @@ class radar_process:
         ppt = ppt.astype(float)
                 ClasRainLow[:] = ppt
         #Extra veriables 
-                if type(ExtraVar) is dict:
-                    for k in ExtraVar.keys():
-                        Var = gr.createVariable(k,ExtraVar[k]['type'],('ncols','nrows'),zlib=True)
-            Var[:] = ExtraVar[k]['Data']
-                #ArrayVar
-                if type(ArrayVar1) is dict:
-                    for k in ArrayVar1.keys():
-                        var = gr.createVariable(k,ArrayVar1[k]['type'],('narray1',),zlib=True)
-                        var[:] = ArrayVar1[k]['Data'] 
-                if type(ArrayVar2) is dict:
-                    for k in ArrayVar2.keys():
-                        var = gr.createVariable(k,ArrayVar2[k]['type'],('narray2',),zlib=True)
-                        var[:] = ArrayVar2[k]['Data']
-                #Cierra el archivo 
+		if type(ExtraVar) is dict:
+			for k in ExtraVar.keys():
+				Var = gr.createVariable(k,ExtraVar[k]['type'],('ncols','nrows'),zlib=True)
+		Var[:] = ExtraVar[k]['Data']
+			#ArrayVar
+		if type(ArrayVar1) is dict:
+			for k in ArrayVar1.keys():
+				var = gr.createVariable(k,ArrayVar1[k]['type'],('narray1',),zlib=True)
+				var[:] = ArrayVar1[k]['Data'] 
+		if type(ArrayVar2) is dict:
+			for k in ArrayVar2.keys():
+				var = gr.createVariable(k,ArrayVar2[k]['type'],('narray2',),zlib=True)
+				var[:] = ArrayVar2[k]['Data']
+			#Cierra el archivo 
         gr.setncatts(Dict)
         gr.close()
                 
