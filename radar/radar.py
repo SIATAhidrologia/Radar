@@ -600,7 +600,7 @@ class radar_process:
 		gr.close()
 
 
-	def save_rain_class_new(self, ruta, ExtraVar=None, ArrayVar1=None, ArrayVar2=None):
+	def save_rain_class_new(self, ruta, ExtraVar=None, ArrayVar1=None, ArrayVar2=None, complevel = 9):
 
 		yll = 4.9
 		xll = -76.82
@@ -648,13 +648,13 @@ class radar_process:
 			DimArray = gr.createDimension('narray2', ArrayVar2[k]['Data'].size)
 
 		ClasStruct = gr.createVariable(
-			'Conv_Strat', 'i4', ('Lat', 'Lon'), zlib=True, complevel=9)
+			'Conv_Strat', 'i4', ('Lat', 'Lon'), zlib=True, complevel=complevel)
 		ClasRain = gr.createVariable(
-			'Rain', 'i4', ('Lat', 'Lon'), zlib=True, complevel=9)
+			'Rain', 'i4', ('Lat', 'Lon'), zlib=True, complevel=complevel)
 		ClasRainHigh = gr.createVariable(
-			'Rhigh', 'i4', ('Lat', 'Lon'), zlib=True, complevel=9)
+			'Rhigh', 'i4', ('Lat', 'Lon'), zlib=True, complevel=complevel)
 		ClasRainLow = gr.createVariable(
-			'Rlow', 'i4', ('Lat', 'Lon'), zlib=True, complevel=9)
+			'Rlow', 'i4', ('Lat', 'Lon'), zlib=True, complevel=complevel)
 
 		x = gr.createVariable('Lon', 'f8', ('Lon',))
 		y = gr.createVariable('Lat', 'f8', ('Lat',))
