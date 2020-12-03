@@ -599,6 +599,104 @@ class radar_process:
 		gr.setncatts(Dict)
 		gr.close()
 
+
+	def save_rain_class_new(self, ruta, ExtraVar=None, ArrayVar1=None, ArrayVar2=None):
+
+		yll = 4.9
+		xll = -76.82
+		dx = 0.0015
+		dxp = 125.0
+		nodata = -999
+		ncols = 1728
+		nrows = 1728
+
+		RadProp = [ncols, nrows, xll, yll, dx, nodata]
+
+		gr = Dataset(ruta, 'w', format='NETCDF4')
+		'Descripcion: Guarda datos de radar procesados\n'\
+			'\n'\
+			'Parametros\n'\
+			'----------\n'\
+			'ruta : Ruta donde la cuenca sera guardada.\n'\
+			'ExtraVar: Variables extras de simulacion deben ir en un diccionario.\n'\
+			'	Forma del diccionario Dict = {"varName": {"Data": vector[ncells], "type": "tipo"}}.\n'\
+			'ArrayVar 1 y 2: Variables array en una dim para ser guadadas.\n'\
+			'       Forma: DicArray = {"varName": {"Data":vector, "type":"tipo"}}.\n'\
+			'	Los tipos de variables son: flotante: "f4", entero "i4".\n'\
+			'\n'\
+			'Retornos\n'\
+			'----------\n'\
+			'self : Con las variables iniciadas.\n'\
+			#Diccionario de propiedades
+		Dict = {'ncols': RadProp[0],
+				'nrows': RadProp[1],
+				'xll': RadProp[2],
+				'yll': RadProp[3],
+				'dx': RadProp[4],
+				'Nota': 'Los valores de Rain corresponden a la intensidad horaria de la preicpitacion, multiplicada x1000 para convertir a enteros para optimizar el almacenamiento, para covertir a acumualdos en el intervalo de aproximadamente 5 minutos para el que es valido se debe dividir por 1000 para pasar a folatentes en mm/hr y luego se divide por 12 para pasar a acumulado en 5 minutos en mm'}
+		#Establece tamano de las variables
+
+		DimNcol = gr.createDimension('Lon', self.ConvStra.shape[0])
+		DimNfil = gr.createDimension('Lat', self.ConvStra.shape[1])
+
+		#variables del arrayVar
+		if type(ArrayVar1) is dict:
+			k = list(ArrayVar1.keys())[0]
+			DimArray = gr.createDimension('narray1', ArrayVar1[k]['Data'].size)
+		if type(ArrayVar2) is dict:
+			k = list(ArrayVar2.keys())[0]
+			DimArray = gr.createDimension('narray2', ArrayVar2[k]['Data'].size)
+
+		ClasStruct = gr.createVariable(
+			'Conv_Strat', 'i4', ('Lat', 'Lon'), zlib=True, complevel=9)
+		ClasRain = gr.createVariable(
+			'Rain', 'i4', ('Lat', 'Lon'), zlib=True, complevel=9)
+		ClasRainHigh = gr.createVariable(
+			'Rhigh', 'i4', ('Lat', 'Lon'), zlib=True, complevel=9)
+		ClasRainLow = gr.createVariable(
+			'Rlow', 'i4', ('Lat', 'Lon'), zlib=True, complevel=9)
+
+		x = gr.createVariable('Lon', 'f8', ('Lon',))
+		y = gr.createVariable('Lat', 'f8', ('Lat',))
+
+		x[:] = RadProp[2] + np.arange(RadProp[0]) * RadProp[4]
+		y[:] = RadProp[3] + np.arange(RadProp[1]) * RadProp[4]
+
+		#Asigna valores a las variables
+		ClasStruct[:] = self.ConvStra
+		#Lluvia normal
+		ppt = np.copy(self.ppt['media']) * 1000
+		ppt = ppt.astype(float)
+		ClasRain[:] = ppt
+		#Lluvia alta
+		ppt = np.copy(self.ppt['alta']) * 1000
+		ppt = ppt.astype(float)
+		ClasRainHigh[:] = ppt
+		#Lluvia baja
+		ppt = np.copy(self.ppt['baja']) * 1000
+		ppt = ppt.astype(float)
+		ClasRainLow[:] = ppt
+		#Extra veriables
+		if type(ExtraVar) is dict:
+			for k in ExtraVar.keys():
+				Var = gr.createVariable(
+					k, ExtraVar[k]['type'], ('ncols', 'nrows'), zlib=True)
+				Var[:] = ExtraVar[k]['Data']
+		if type(ArrayVar1) is dict:
+			for k in ArrayVar1.keys():
+				var = gr.createVariable(
+					k, ArrayVar1[k]['type'], ('narray1',), zlib=True)
+				var[:] = ArrayVar1[k]['Data']
+		if type(ArrayVar2) is dict:
+			for k in ArrayVar2.keys():
+				var = gr.createVariable(
+					k, ArrayVar2[k]['type'], ('narray2',), zlib=True)
+				var[:] = ArrayVar2[k]['Data']
+
+		#Cierra el archivo
+		gr.setncatts(Dict)
+		gr.close()
+
 	# Genera kernels circulares
 	def CircKernel(self,radio):
 		#Centro del kernel y cantidad de datos
